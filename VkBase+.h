@@ -41,11 +41,13 @@ namespace vulkan {
         VkPipelineDynamicStateCreateInfo dynamicStateCi =
         { VK_STRUCTURE_TYPE_PIPELINE_DYNAMIC_STATE_CREATE_INFO };
         std::vector<VkDynamicState> dynamicStates;
+
         //--------------------
         graphicsPipelineCreateInfoPack() {
             SetCreateInfos();
             createInfo.basePipelineIndex = -1;
         }
+
         graphicsPipelineCreateInfoPack(const graphicsPipelineCreateInfoPack& other) noexcept {
             createInfo = other.createInfo;
             SetCreateInfos();
@@ -69,8 +71,10 @@ namespace vulkan {
             dynamicStates = other.dynamicStates;
             UpdateAllArrayAddresses();
         }
+
         //Getter
         operator VkGraphicsPipelineCreateInfo& () { return createInfo; }
+
         //Non-const Function
         void UpdateAllArrays() {
             createInfo.stageCount = shaderStages.size();
@@ -94,6 +98,7 @@ namespace vulkan {
             createInfo.pColorBlendState = &colorBlendStateCi;
             createInfo.pDynamicState = &dynamicStateCi;
         }
+
         void UpdateAllArrayAddresses() {
             createInfo.pStages = shaderStages.data();
             vertexInputStateCi.pVertexBindingDescriptions = vertexInputBindings.data();
