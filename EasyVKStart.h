@@ -16,13 +16,13 @@
 #include <numeric>
 #include <numbers>
 
-// GLM, ÓÃÓÚOpenGLµÄÊıÑ§¿â£¬Ò²ÊÊÓÃÓÚVulkan
+// GLM, ç”¨äºOpenGLçš„æ•°å­¦åº“ï¼Œä¹Ÿé€‚ç”¨äºVulkan
 #define GLM_FORCE_DEPTH_ZERO_TO_ONE
-// Èç¹ûÄã¹ßÓÃ×óÊÖ×ø±êÏµ£¬ÔÚ´Ë¶¨ÒåGLM_FORCE_LEFT_HANDED
+// å¦‚æœä½ æƒ¯ç”¨å·¦æ‰‹åæ ‡ç³»ï¼Œåœ¨æ­¤å®šä¹‰GLM_FORCE_LEFT_HANDED
 #include <glm.hpp>
 #include <gtc/matrix_transform.hpp>
 
-// stb_image.h, ÓÃÓÚ¶ÁÈ¡ÌùÍ¼£¬Ö§³Öbmp¡¢tga¡¢png¡¢jpeg¡¢hdrµÈ³£¼û¸ñÊ½
+// stb_image.h, ç”¨äºè¯»å–è´´å›¾ï¼Œæ”¯æŒbmpã€tgaã€pngã€jpegã€hdrç­‰å¸¸è§æ ¼å¼
 #include <stb_image.h>
 
 // Vulkan
