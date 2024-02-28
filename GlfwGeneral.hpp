@@ -3,14 +3,14 @@
 #include <GLFW/glfw3.h>
 #pragma comment(lib, "glfw3.lib")
 
-// ´°¿ÚÖ¸Õë£¬È«¾Ö±äÁ¿×Ô¶¯³õÊ¼»¯ÎªNULL
+// çª—å£æŒ‡é’ˆï¼Œå…¨å±€å˜é‡è‡ªåŠ¨åˆå§‹åŒ–ä¸ºNULL
 GLFWwindow* pWindow;
-// ÏÔÊ¾Æ÷¶ÔÏóÖ¸Õë
+// æ˜¾ç¤ºå™¨å¯¹è±¡æŒ‡é’ˆ
 GLFWmonitor* pMonitor;
-// ´°¿Ú±êÌâ
+// çª—å£æ ‡é¢˜
 const char* windowTitle = "EasyVK";
 
-// ³õÊ¼»¯´°¿Ú
+// åˆå§‹åŒ–çª—å£
 bool InitializeWindow(VkExtent2D size, bool fullScreen = false, bool isResizable = true, bool limitFrameRate = true) {
 	using namespace vulkan;
 
@@ -18,21 +18,21 @@ bool InitializeWindow(VkExtent2D size, bool fullScreen = false, bool isResizable
 		std::cout << std::format("[ InitializeWindow ] ERROR\nFailed to initialize GLFW!\n");
 		return false;
 	}
-	// ÏòGLFWËµÃ÷²»ĞèÒªOpenGLµÄAPI, ²»ĞèÒªÔÚ´´½¨´°¿ÚÊ±´´½¨OpenGLµÄÉÏÏÂÎÄ
+	// å‘GLFWè¯´æ˜ä¸éœ€è¦OpenGLçš„API, ä¸éœ€è¦åœ¨åˆ›å»ºçª—å£æ—¶åˆ›å»ºOpenGLçš„ä¸Šä¸‹æ–‡
 	glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
-	// Ö¸¶¨´°¿Ú¿É·ñÀ­Éì
+	// æŒ‡å®šçª—å£å¯å¦æ‹‰ä¼¸
 	glfwWindowHint(GLFW_RESIZABLE, isResizable);
-	// ÊµÏÖÍ¸Ã÷´°¿Ú±³¾°
+	// å®ç°é€æ˜çª—å£èƒŒæ™¯
 	glfwWindowHint(GLFW_TRANSPARENT_FRAMEBUFFER, true);
-	// »ñÈ¡ÏÔÊ¾Æ÷Ö¸Õë£¬ËüµÄ×÷ÓÃÖ®Ò»ÊÇÔÚ´´½¨È«ÆÁ´°¿ÚÊ±×÷ÎªglfwCreateWindowµÄµÚËÄ¸ö²ÎÊı
+	// è·å–æ˜¾ç¤ºå™¨æŒ‡é’ˆï¼Œå®ƒçš„ä½œç”¨ä¹‹ä¸€æ˜¯åœ¨åˆ›å»ºå…¨å±çª—å£æ—¶ä½œä¸ºglfwCreateWindowçš„ç¬¬å››ä¸ªå‚æ•°
 	pMonitor = glfwGetPrimaryMonitor();
-	// »ñÈ¡ÏÔÊ¾Æ÷µ±Ç°µÄÊÓÆµÄ£Ê½, ÊÓÆµÄ£Ê½¿ÉÄÜÒòÎªÓÃ»§µÄ²Ù×÷¶øÔÚ³ÌĞòÔËĞĞ¹ı³ÌÖĞ·¢Éú±ä¸ü£¬Òò´Ë×ÜÊÇÔÚĞèÒªÊ±»ñÈ¡£¬¶ø²»½«Æä´æ´¢µ½È«¾Ö±äÁ¿
+	// è·å–æ˜¾ç¤ºå™¨å½“å‰çš„è§†é¢‘æ¨¡å¼, è§†é¢‘æ¨¡å¼å¯èƒ½å› ä¸ºç”¨æˆ·çš„æ“ä½œè€Œåœ¨ç¨‹åºè¿è¡Œè¿‡ç¨‹ä¸­å‘ç”Ÿå˜æ›´ï¼Œå› æ­¤æ€»æ˜¯åœ¨éœ€è¦æ—¶è·å–ï¼Œè€Œä¸å°†å…¶å­˜å‚¨åˆ°å…¨å±€å˜é‡
 	const GLFWvidmode* pMode = glfwGetVideoMode(pMonitor);
-	// ´´½¨´°¿Ú
+	// åˆ›å»ºçª—å£
 	pWindow = fullScreen ?
 		glfwCreateWindow(pMode->width, pMode->height, windowTitle, pMonitor, nullptr) :
 		glfwCreateWindow(size.width, size.height, windowTitle, nullptr, nullptr);
-	// ´´½¨Ê§°ÜÊ±, ÓÃglfwTerminate()À´ÇåÀíGLFW²¢ÈÃº¯Êı·µ»Øfalse
+	// åˆ›å»ºå¤±è´¥æ—¶, ç”¨glfwTerminate()æ¥æ¸…ç†GLFWå¹¶è®©å‡½æ•°è¿”å›false
 	if (!pWindow) {
 		std::cout << std::format("[ InitializeWindow ]\nFailed to create a glfw window!\n");
 		glfwTerminate();
@@ -45,7 +45,7 @@ bool InitializeWindow(VkExtent2D size, bool fullScreen = false, bool isResizable
 #else
 	uint32_t extensionCount = 0;
 	const char** extensionNames;
-	// »ñÈ¡Æ½Ì¨ËùĞèµÄÀ©Õ¹£¬ÈôÖ´ĞĞ³É¹¦£¬·µ»ØÒ»¸öÖ¸Õë£¬Ö¸ÏòÒ»¸öÓÉËùĞèÀ©Õ¹µÄÃû³ÆÎªÔªËØµÄÊı×é£¬Ê§°ÜÔò·µ»Ønullptr£¬²¢ÒâÎ¶×Å´ËÉè±¸²»Ö§³ÖVulkan
+	// è·å–å¹³å°æ‰€éœ€çš„æ‰©å±•ï¼Œè‹¥æ‰§è¡ŒæˆåŠŸï¼Œè¿”å›ä¸€ä¸ªæŒ‡é’ˆï¼ŒæŒ‡å‘ä¸€ä¸ªç”±æ‰€éœ€æ‰©å±•çš„åç§°ä¸ºå…ƒç´ çš„æ•°ç»„ï¼Œå¤±è´¥åˆ™è¿”å›nullptrï¼Œå¹¶æ„å‘³ç€æ­¤è®¾å¤‡ä¸æ”¯æŒVulkan
 	extensionNames = glfwGetRequiredInstanceExtensions(&extensionCount);
 	if (!extensionNames) {
 		std::cout << std::format("[ InitializeWindow ]\nVulkan is not available on this machine!\n");
@@ -56,15 +56,15 @@ bool InitializeWindow(VkExtent2D size, bool fullScreen = false, bool isResizable
 		graphicsBase::Base().PushInstanceExtension(extensionNames[i]);
 #endif
 	graphicsBase::Base().PushDeviceExtension(VK_KHR_SWAPCHAIN_EXTENSION_NAME);
-	// »ñÈ¡×îĞÂapi°æ±¾
+	// è·å–æœ€æ–°apiç‰ˆæœ¬
 	graphicsBase::Base().UseLatestApiVersion();
-	// ´´½¨vulkan instance
+	// åˆ›å»ºvulkan instance
 	if (graphicsBase::Base().CreateInstance())
 		return false;
 
-	// ´´½¨window surface
+	// åˆ›å»ºwindow surface
 	VkSurfaceKHR surface = VK_NULL_HANDLE;
-	// glfwCreateWindowSurfaceĞèÒªvulkanÊµÀı¶ÔÏó, window surface»áÔÚºóĞø´´½¨swap chainÊ±±»Ê¹ÓÃ
+	// glfwCreateWindowSurfaceéœ€è¦vulkanå®ä¾‹å¯¹è±¡, window surfaceä¼šåœ¨åç»­åˆ›å»ºswap chainæ—¶è¢«ä½¿ç”¨
 	if (VkResult result = glfwCreateWindowSurface(vulkan::graphicsBase::Base().Instance(), pWindow, nullptr, &surface)) {
 		std::cout << std::format("[ InitializeWindow ] ERROR\nFailed to create a window surface!\nError code: {}\n", int32_t(result));
 		glfwTerminate();
@@ -72,38 +72,38 @@ bool InitializeWindow(VkExtent2D size, bool fullScreen = false, bool isResizable
 	}
 	graphicsBase::Base().Surface(surface);
 
-	// Ñ¡ÔñÎïÀíÉè±¸
+	// é€‰æ‹©ç‰©ç†è®¾å¤‡
 	if (vulkan::graphicsBase::Base().GetPhysicalDevices() ||
 		vulkan::graphicsBase::Base().DeterminePhysicalDevice(0, true, false) ||
 		vulkan::graphicsBase::Base().CreateDevice())
 		return false;
 
-	// ´´½¨swap chain
+	// åˆ›å»ºswap chain
 	if (graphicsBase::Base().CreateSwapchain(limitFrameRate))
 		return false;
 
 	return true;
 }
 
-// ÖÕÖ¹´°¿Ú
+// ç»ˆæ­¢çª—å£
 void TerminateWindow() {
 	vulkan::graphicsBase::Base().WaitIdle();
 	glfwTerminate();
 }
 
-// È«ÆÁ»¯
+// å…¨å±åŒ–
 void MakeWindowFullScreen() {
 	const GLFWvidmode* pMode = glfwGetVideoMode(pMonitor);
 	glfwSetWindowMonitor(pWindow, pMonitor, 0, 0, pMode->width, pMode->height, pMode->refreshRate);
 }
 
-// ´°¿Ú»¯
+// çª—å£åŒ–
 void MakeWindowWindowed(VkOffset2D position, VkExtent2D size) {
 	const GLFWvidmode* pMode = glfwGetVideoMode(pMonitor);
 	glfwSetWindowMonitor(pWindow, nullptr, position.x, position.y, size.width, size.height, pMode->refreshRate);
 }
 
-// ´°¿Ú±êÌâÏÔÊ¾fps
+// çª—å£æ ‡é¢˜æ˜¾ç¤ºfps
 void TitleFps() {
 	static double time0 = glfwGetTime();
 	static double time1;
@@ -115,7 +115,7 @@ void TitleFps() {
 	if ((dt = time1 - time0) >= 1) {
 		info.precision(1);
 		info << windowTitle << "    " << std::fixed << dframe / dt << " FPS";
-		// glfwSetWindowTitleÓÃÓÚÉèÖÃ´°¿Ú±êÌâ
+		// glfwSetWindowTitleç”¨äºè®¾ç½®çª—å£æ ‡é¢˜
 		glfwSetWindowTitle(pWindow, info.str().c_str());
 		info.str("");
 		time0 = time1;
