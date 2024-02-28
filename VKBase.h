@@ -13,7 +13,7 @@
 #define ENABLE_DEBUG_MESSENGER false
 #endif
 
-// vulkanÃüÃû¿Õ¼äÖĞÖ÷Òª·â×°ÁËÒ»Ğ©vulkanÖĞµÄ»ù±¾¶ÔÏó
+// vulkanå‘½åç©ºé—´ä¸­ä¸»è¦å°è£…äº†ä¸€äº›vulkanä¸­çš„åŸºæœ¬å¯¹è±¡
 namespace vulkan {
 	constexpr VkExtent2D defaultWindowSize = { 1280, 720 };
 	inline auto& outStream = std::cout;
@@ -54,7 +54,7 @@ namespace vulkan {
 
 	class graphicsBase {
 		uint32_t apiVersion = VK_API_VERSION_1_0;
-		// µ¥ÀıÀà¶ÔÏóÊÇ¾²Ì¬µÄ£¬Î´Éè¶¨³õÊ¼ÖµÒàÎŞ¹¹Ôìº¯ÊıµÄ³ÉÔ±»á±»Áã³õÊ¼»¯
+		// å•ä¾‹ç±»å¯¹è±¡æ˜¯é™æ€çš„ï¼Œæœªè®¾å®šåˆå§‹å€¼äº¦æ— æ„é€ å‡½æ•°çš„æˆå‘˜ä¼šè¢«é›¶åˆå§‹åŒ–
 		VkInstance instance;
 		VkPhysicalDevice physicalDevice;
 		VkPhysicalDeviceProperties physicalDeviceProperties;
@@ -62,7 +62,7 @@ namespace vulkan {
 		std::vector<VkPhysicalDevice> availablePhysicalDevices;
 
 		VkDevice device;
-		// ÓĞĞ§µÄË÷Òı´Ó0¿ªÊ¼£¬Òò´ËÊ¹ÓÃÌØÊâÖµVK_QUEUE_FAMILY_IGNORED£¨ÎªUINT32_MAX£©Îª¶ÓÁĞ×åË÷ÒıµÄÄ¬ÈÏÖµ
+		// æœ‰æ•ˆçš„ç´¢å¼•ä»0å¼€å§‹ï¼Œå› æ­¤ä½¿ç”¨ç‰¹æ®Šå€¼VK_QUEUE_FAMILY_IGNOREDï¼ˆä¸ºUINT32_MAXï¼‰ä¸ºé˜Ÿåˆ—æ—ç´¢å¼•çš„é»˜è®¤å€¼
 		uint32_t queueFamilyIndex_graphics = VK_QUEUE_FAMILY_IGNORED;
 		uint32_t queueFamilyIndex_presentation = VK_QUEUE_FAMILY_IGNORED;
 		uint32_t queueFamilyIndex_compute = VK_QUEUE_FAMILY_IGNORED;
@@ -76,8 +76,9 @@ namespace vulkan {
 		VkSwapchainKHR swapchain;
 		std::vector <VkImage> swapchainImages;
 		std::vector <VkImageView> swapchainImageViews;
+		// å½“å‰swap chainå›¾åƒç´¢å¼•
 		uint32_t currentImageIndex = 0;
-		// ±£´æ½»»»Á´µÄ´´½¨ĞÅÏ¢ÒÔ±ãÖØ½¨½»»»Á´
+		// ä¿å­˜äº¤æ¢é“¾çš„åˆ›å»ºä¿¡æ¯ä»¥ä¾¿é‡å»ºäº¤æ¢é“¾
 		VkSwapchainCreateInfoKHR swapchainCreateInfo = {};
 
 		std::vector<const char*> instanceLayers;
@@ -123,15 +124,15 @@ namespace vulkan {
 			}
 			vkDestroyInstance(instance, nullptr);
 		}
-		// ±»CreateSwapchainºÍRecreateSwapchainµ÷ÓÃ
+		// è¢«CreateSwapchainå’ŒRecreateSwapchainè°ƒç”¨
 		result_t CreateSwapchain_Internal() {
-			// ¸ù¾İswapchainCreateInfo´´½¨swap chain
+			// æ ¹æ®swapchainCreateInfoåˆ›å»ºswap chain
 			if (VkResult result = vkCreateSwapchainKHR(device, &swapchainCreateInfo, nullptr, &swapchain)) {
 				outStream << std::format("[ graphicsBase ] ERROR\nFailed to create a swapchain!\nError code: {}\n", int32_t(result));
 				return result;
 			}
 
-			// »ñÈ¡swap chain¶ÔÓ¦µÄimages
+			// è·å–swap chainå¯¹åº”çš„images
 			uint32_t swapchainImageCount;
 			if (VkResult result = vkGetSwapchainImagesKHR(device, swapchain, &swapchainImageCount, nullptr)) {
 				outStream << std::format("[ graphicsBase ] ERROR\nFailed to get the count of swapchain images!\nError code: {}\n", int32_t(result));
@@ -143,7 +144,7 @@ namespace vulkan {
 				return result;
 			}
 
-			// Îªswap chainÖĞµÄimage´´½¨image view, Í¼ÏñÊÓÍ¼£¨VkImageView£©¶¨ÒåÁËÍ¼ÏñµÄÊ¹ÓÃ·½Ê½
+			// ä¸ºswap chainä¸­çš„imageåˆ›å»ºimage view, å›¾åƒè§†å›¾ï¼ˆVkImageViewï¼‰å®šä¹‰äº†å›¾åƒçš„ä½¿ç”¨æ–¹å¼
 			swapchainImageViews.resize(swapchainImageCount);
 			VkImageViewCreateInfo imageViewCreateInfo = {
 				.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO,
@@ -162,7 +163,7 @@ namespace vulkan {
 			return VK_SUCCESS;
 		}
 
-		// ¸Ãº¯Êı±»DeterminePhysicalDeviceµ÷ÓÃ£¬ÓÃÓÚ¼ì²éÎïÀíÉè±¸ÊÇ·ñÂú×ãËùĞèµÄ¶ÓÁĞ×åÀàĞÍ£¬²¢½«¶ÔÓ¦µÄ¶ÓÁĞ×åË÷Òı·µ»Øµ½queueFamilyIndices£¬Ö´ĞĞ³É¹¦Ê±Ö±½Ó½«Ë÷ÒıĞ´ÈëÏàÓ¦³ÉÔ±±äÁ¿
+		// è¯¥å‡½æ•°è¢«DeterminePhysicalDeviceè°ƒç”¨ï¼Œç”¨äºæ£€æŸ¥ç‰©ç†è®¾å¤‡æ˜¯å¦æ»¡è¶³æ‰€éœ€çš„é˜Ÿåˆ—æ—ç±»å‹ï¼Œå¹¶å°†å¯¹åº”çš„é˜Ÿåˆ—æ—ç´¢å¼•è¿”å›åˆ°queueFamilyIndicesï¼Œæ‰§è¡ŒæˆåŠŸæ—¶ç›´æ¥å°†ç´¢å¼•å†™å…¥ç›¸åº”æˆå‘˜å˜é‡
 		result_t GetQueueFamilyIndices(VkPhysicalDevice physicalDevice, bool enableGraphicsQueue, bool enableComputeQueue, uint32_t(&queueFamilyIndices)[3]) {
 			uint32_t queueFamilyCount = 0;
 			vkGetPhysicalDeviceQueueFamilyProperties(physicalDevice, &queueFamilyCount, nullptr);
@@ -178,7 +179,7 @@ namespace vulkan {
 					supportPresentation = false,
 					supportCompute = enableComputeQueue && queueFamilyPropertieses[i].queueFlags & VK_QUEUE_COMPUTE_BIT;
 				if (surface)
-					// ²éÑ¯¶ÓÁĞ×åÊÇ·ñÖ§³Ö½«Í¼Ïñ³ÊÏÖµ½¸Ãsurface
+					// æŸ¥è¯¢é˜Ÿåˆ—æ—æ˜¯å¦æ”¯æŒå°†å›¾åƒå‘ˆç°åˆ°è¯¥surface
 					if (VkResult result = vkGetPhysicalDeviceSurfaceSupportKHR(physicalDevice, i, surface, &supportPresentation)) {
 						outStream << std::format("[ graphicsBase ] ERROR\nFailed to determine if the queue family supports presentation!\nError code: {}\n", int32_t(result));
 						return result;
@@ -244,7 +245,7 @@ namespace vulkan {
 			outStream << std::format("[ graphicsBase ] ERROR\nFailed to get the function pointer of vkCreateDebugUtilsMessengerEXT!\n");
 			return VK_RESULT_MAX_ENUM;
 		}
-		// Static Function, ÓÃÓÚÏòinstanceLayers»òinstanceExtensionsÈİÆ÷ÖĞÌí¼Ó²»ÖØ¸´µÄ×Ö·û´®Ö¸Õë
+		// Static Function, ç”¨äºå‘instanceLayersæˆ–instanceExtensionså®¹å™¨ä¸­æ·»åŠ ä¸é‡å¤çš„å­—ç¬¦ä¸²æŒ‡é’ˆ
 		static void AddLayerOrExtension(std::vector<const char*>& container, const char* name) {
 			for (auto& i : container)
 				if (!strcmp(name, i))
@@ -316,13 +317,18 @@ namespace vulkan {
 		VkImage SwapchainImage(uint32_t index) const {
 			return swapchainImages[index];
 		}
+
 		VkImageView SwapchainImageView(uint32_t index) const {
 			return swapchainImageViews[index];
 		}
 		uint32_t SwapchainImageCount() const {
 			return uint32_t(swapchainImages.size());
 		}
-		uint32_t CurrentImageIndex() const { return currentImageIndex; }
+
+		uint32_t CurrentImageIndex() const {
+			return currentImageIndex;
+		}
+
 		const VkSwapchainCreateInfoKHR& SwapchainCreateInfo() const {
 			return swapchainCreateInfo;
 		}
@@ -359,7 +365,7 @@ namespace vulkan {
 			callbacks_destroyDevice.push_back(function);
 		}
 
-		// ÓÃÓÚ´´½¨VulkanÊµÀıÇ°
+		// ç”¨äºåˆ›å»ºVulkanå®ä¾‹å‰
 		void PushInstanceLayer(const char* layerName) {
 			AddLayerOrExtension(instanceLayers, layerName);
 		}
@@ -372,7 +378,7 @@ namespace vulkan {
 			return VK_SUCCESS;
 		}
 
-		// ÓÃÓÚ´´½¨VulkanÊµÀı
+		// ç”¨äºåˆ›å»ºVulkanå®ä¾‹
 		result_t CreateInstance(const void* pNext = nullptr, VkInstanceCreateFlags flags = 0) {
 			if constexpr (ENABLE_DEBUG_MESSENGER)
 				PushInstanceLayer("VK_LAYER_KHRONOS_validation"),
@@ -405,7 +411,7 @@ namespace vulkan {
 			return VK_SUCCESS;
 		}
 
-		// ¼ì²éËùĞèlayersÊÇ·ñ¿ÉÓÃ, ²»¿ÉÓÃÔò½«´«Èë²ÎÊı¶ÔÓ¦Î»ÖÃ¿Õ
+		// æ£€æŸ¥æ‰€éœ€layersæ˜¯å¦å¯ç”¨, ä¸å¯ç”¨åˆ™å°†ä¼ å…¥å‚æ•°å¯¹åº”ä½ç½®ç©º
 		result_t CheckInstanceLayers(arrayRef<const char*> layersToCheck) const {
 			uint32_t layerCount;
 			std::vector<VkLayerProperties> availableLayers;
@@ -436,7 +442,7 @@ namespace vulkan {
 			return VK_SUCCESS;
 		}
 
-		// ¼ì²éËùĞèextensionsÊÇ·ñ¿ÉÓÃ, ²»¿ÉÓÃÔò½«´«Èë²ÎÊı¶ÔÓ¦Î»ÖÃ¿Õ
+		// æ£€æŸ¥æ‰€éœ€extensionsæ˜¯å¦å¯ç”¨, ä¸å¯ç”¨åˆ™å°†ä¼ å…¥å‚æ•°å¯¹åº”ä½ç½®ç©º
 		result_t CheckInstanceExtensions(arrayRef<const char*> extensionsToCheck, const char* layerName) const {
 			uint32_t extensionCount;
 			std::vector<VkExtensionProperties> availableExtensions;
@@ -475,18 +481,18 @@ namespace vulkan {
 			instanceExtensions = extensionNames;
 		}
 
-		// Set Window Surface, ¸Ãº¯ÊıÓÃÓÚÑ¡ÔñÎïÀíÉè±¸Ç°
+		// Set Window Surface, è¯¥å‡½æ•°ç”¨äºé€‰æ‹©ç‰©ç†è®¾å¤‡å‰
 		void Surface(VkSurfaceKHR surface) {
 			if (!this->surface)
 				this->surface = surface;
 		}
 
-		// ÓÃÓÚ´´½¨Âß¼­Éè±¸Ç°
+		// ç”¨äºåˆ›å»ºé€»è¾‘è®¾å¤‡å‰
 		void PushDeviceExtension(const char* extensionName) {
 			AddLayerOrExtension(deviceExtensions, extensionName);
 		}
 		
-		// ÓÃÓÚ»ñÈ¡ÎïÀíÉè±¸
+		// ç”¨äºè·å–ç‰©ç†è®¾å¤‡
 		result_t GetPhysicalDevices() {
 			uint32_t deviceCount;
 			if (VkResult result = vkEnumeratePhysicalDevices(instance, &deviceCount, nullptr)) {
@@ -503,7 +509,7 @@ namespace vulkan {
 			return result;
 		}
 
-		// ÓÃÓÚÅĞ¶ÏÎïÀíÉè±¸ÉÏµÄ¶ÓÁĞ×åÊÇ·ñÂú×ãÒªÇó
+		// ç”¨äºåˆ¤æ–­ç‰©ç†è®¾å¤‡ä¸Šçš„é˜Ÿåˆ—æ—æ˜¯å¦æ»¡è¶³è¦æ±‚
 		result_t DeterminePhysicalDevice(uint32_t deviceIndex = 0, bool enableGraphicsQueue = true, bool enableComputeQueue = true) {
 			static constexpr uint32_t notFound = INT32_MAX;//== VK_QUEUE_FAMILY_IGNORED & INT32_MAX
 			struct queueFamilyIndexCombination {
@@ -543,7 +549,7 @@ namespace vulkan {
 			return VK_SUCCESS;
 		}
 
-		/// ´´½¨Âß¼­Éè±¸
+		/// åˆ›å»ºé€»è¾‘è®¾å¤‡
 		result_t CreateDevice(const void* pNext = nullptr, VkDeviceCreateFlags flags = 0) {
 			float queuePriority = 1.f;
 			VkDeviceQueueCreateInfo queueCreateInfos[3] = {
@@ -570,7 +576,15 @@ namespace vulkan {
 				queueFamilyIndex_compute != queueFamilyIndex_presentation)
 				queueCreateInfos[queueCreateInfoCount++].queueFamilyIndex = queueFamilyIndex_compute;
 
-			// »ñÈ¡ÎïÀíÉè±¸µÄÉè±¸ÌØĞÔ
+			// test features
+			VkPhysicalDeviceFeatures2 deviceFeatures = {};
+			deviceFeatures.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2;
+			VkPhysicalDeviceVulkan13Features deviceFeatures13 = {};
+			deviceFeatures.pNext = &deviceFeatures13;
+			vkGetPhysicalDeviceFeatures2(physicalDevice, &deviceFeatures);
+			std::cout << std::format("[ physical device features ] : dynamicRendering is {}\n", deviceFeatures13.dynamicRendering);
+			// test features
+			// è·å–ç‰©ç†è®¾å¤‡çš„è®¾å¤‡ç‰¹æ€§
 			VkPhysicalDeviceFeatures physicalDeviceFeatures;
 			vkGetPhysicalDeviceFeatures(physicalDevice, &physicalDeviceFeatures);
 			VkDeviceCreateInfo deviceCreateInfo = {
@@ -595,12 +609,12 @@ namespace vulkan {
 				vkGetDeviceQueue(device, queueFamilyIndex_compute, 0, &queue_compute);
 			vkGetPhysicalDeviceProperties(physicalDevice, &physicalDeviceProperties);
 			vkGetPhysicalDeviceMemoryProperties(physicalDevice, &physicalDeviceMemoryProperties);
-			// Êä³öËùÓÃµÄÎïÀíÉè±¸µÄÃû³Æ
+			// è¾“å‡ºæ‰€ç”¨çš„ç‰©ç†è®¾å¤‡çš„åç§°
 			outStream << std::format("Renderer: {}\n", physicalDeviceProperties.deviceName);
 			return VK_SUCCESS;
 		}
 
-		/// ÓÃÓÚ´´½¨Âß¼­Éè±¸Ê§°Üºó, ³¢ÊÔÈ¥µô·Ç±ØÒªÍØÕ¹²¢ÖØĞÂ´´½¨Âß¼­Éè±¸
+		/// ç”¨äºåˆ›å»ºé€»è¾‘è®¾å¤‡å¤±è´¥å, å°è¯•å»æ‰éå¿…è¦æ‹“å±•å¹¶é‡æ–°åˆ›å»ºé€»è¾‘è®¾å¤‡
 		result_t CheckDeviceExtensions(arrayRef<const char*> extensionsToCheck, const char* layerName = nullptr) const {
 			uint32_t extensionCount;
 			std::vector<VkExtensionProperties> availableExtensions;
@@ -652,7 +666,7 @@ namespace vulkan {
 			return result;
 		}
 		result_t SetSurfaceFormat(VkSurfaceFormatKHR surfaceFormat) {
-			// ²»¿¼ÂÇÃ»ÓĞÖ¸¶¨É«²Ê¿Õ¼äµÄÇé¿ö£¬Ò»ÊÇÒòÎªÉ«²Ê¿Õ¼äVkColorSpaceKHRµÄÁãÖµÎªVK_COLOR_SPACE_SRGB_NONLINEAR_KHR£¬ÊÇ¸öÓĞĞ§µÄÉ«²Ê¿Õ¼ä£¬¶şÊÇÒòÎª²»Í¬É«²Ê¿Õ¼ä¶ÔºóĞø²Ù×÷£¨±ÈÈçÌùÍ¼µÄÍ¼Ïñ¸ñÊ½¡¢Æ¬¶Î×ÅÉ«Æ÷×îºóµÄÉ«µ÷Ó³Éä£©Ó°ÏìºÜ´ó£¬Ã»ÀíÓÉÔÊĞíÈÎÒâµÄÉ«²Ê¿Õ¼ä
+			// ä¸è€ƒè™‘æ²¡æœ‰æŒ‡å®šè‰²å½©ç©ºé—´çš„æƒ…å†µï¼Œä¸€æ˜¯å› ä¸ºè‰²å½©ç©ºé—´VkColorSpaceKHRçš„é›¶å€¼ä¸ºVK_COLOR_SPACE_SRGB_NONLINEAR_KHRï¼Œæ˜¯ä¸ªæœ‰æ•ˆçš„è‰²å½©ç©ºé—´ï¼ŒäºŒæ˜¯å› ä¸ºä¸åŒè‰²å½©ç©ºé—´å¯¹åç»­æ“ä½œï¼ˆæ¯”å¦‚è´´å›¾çš„å›¾åƒæ ¼å¼ã€ç‰‡æ®µç€è‰²å™¨æœ€åçš„è‰²è°ƒæ˜ å°„ï¼‰å½±å“å¾ˆå¤§ï¼Œæ²¡ç†ç”±å…è®¸ä»»æ„çš„è‰²å½©ç©ºé—´
 			bool formatIsAvailable = false;
 			if (!surfaceFormat.format) {
 				for (auto& i : availableSurfaceFormats)
@@ -679,15 +693,15 @@ namespace vulkan {
 			return VK_SUCCESS;
 		}
 		result_t CreateSwapchain(bool limitFrameRate = true, const void* pNext = nullptr, VkSwapchainCreateFlagsKHR flags = 0) {
-			// Get surface capabilities, Ïà¹ØµÄ²ÎÊıÓĞ£º½»»»Á´Í¼ÏñµÄÊıÁ¿¡¢³ß´ç¡¢ÊÓµãÊı¡¢±ä»»¡¢Í¸Ã÷Í¨µÀµÄ·½Ê½¡¢Í¼ÏñµÄÓÃÍ¾¡£
+			// Get surface capabilities, ç›¸å…³çš„å‚æ•°æœ‰ï¼šäº¤æ¢é“¾å›¾åƒçš„æ•°é‡ã€å°ºå¯¸ã€è§†ç‚¹æ•°ã€å˜æ¢ã€é€æ˜é€šé“çš„æ–¹å¼ã€å›¾åƒçš„ç”¨é€”ã€‚
 			VkSurfaceCapabilitiesKHR surfaceCapabilities = {};
 			if (VkResult result = vkGetPhysicalDeviceSurfaceCapabilitiesKHR(physicalDevice, surface, &surfaceCapabilities)) {
 				outStream << std::format("[ graphicsBase ] ERROR\nFailed to get physical device surface capabilities!\nError code: {}\n", int32_t(result));
 				return result;
 			}
-			// Set image count, swap chainÖĞµÄimageÊıÁ¿×îºÃ²»ÒªÌ«ÉÙ£¬±ÜÃâ×èÈû£¬Í¬Ê±²»ÒªÌ«¶à£¬±ÜÃâÕ¼ÓÃ¹ı¶àÏÔ´æ
+			// Set image count, swap chainä¸­çš„imageæ•°é‡æœ€å¥½ä¸è¦å¤ªå°‘ï¼Œé¿å…é˜»å¡ï¼ŒåŒæ—¶ä¸è¦å¤ªå¤šï¼Œé¿å…å ç”¨è¿‡å¤šæ˜¾å­˜
 			swapchainCreateInfo.minImageCount = surfaceCapabilities.minImageCount + (surfaceCapabilities.maxImageCount > surfaceCapabilities.minImageCount);
-			// Set image extent, ÉèÖÃimage³ß´ç
+			// Set image extent, è®¾ç½®imageå°ºå¯¸
 			swapchainCreateInfo.imageExtent =
 				surfaceCapabilities.currentExtent.width == -1 ?
 				VkExtent2D{
@@ -696,7 +710,7 @@ namespace vulkan {
 				surfaceCapabilities.currentExtent;
 			// Set transformation
 			swapchainCreateInfo.preTransform = surfaceCapabilities.currentTransform;
-			// Set alpha compositing mode, VK_COMPOSITE_ALPHA_INHERIT_BIT_KHR±íÊ¾Í¸Ã÷¶ÈµÄ´¦Àí·½Ê½ÓÉÓ¦ÓÃ³ÌĞòµÄÆäËû²¿·Ö£¨VulkanÒÔÍâµÄ²¿·Ö£©Ö¸¶¨
+			// Set alpha compositing mode, VK_COMPOSITE_ALPHA_INHERIT_BIT_KHRè¡¨ç¤ºé€æ˜åº¦çš„å¤„ç†æ–¹å¼ç”±åº”ç”¨ç¨‹åºçš„å…¶ä»–éƒ¨åˆ†ï¼ˆVulkanä»¥å¤–çš„éƒ¨åˆ†ï¼‰æŒ‡å®š
 			if (surfaceCapabilities.supportedCompositeAlpha & VK_COMPOSITE_ALPHA_INHERIT_BIT_KHR)
 				swapchainCreateInfo.compositeAlpha = VK_COMPOSITE_ALPHA_INHERIT_BIT_KHR;
 			else
@@ -705,12 +719,12 @@ namespace vulkan {
 						swapchainCreateInfo.compositeAlpha = VkCompositeAlphaFlagBitsKHR(surfaceCapabilities.supportedCompositeAlpha & 1 << i);
 						break;
 					}
-			// Set image usage, image±ØĞèÄÜ±»ÓÃ×÷ÑÕÉ«¸½¼ş
+			// Set image usage, imageå¿…éœ€èƒ½è¢«ç”¨ä½œé¢œè‰²é™„ä»¶
 			swapchainCreateInfo.imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
-			// Èç¹ûimageÄÜ¹»±»ÓÃ×÷transfer_srcµÄ»°£¬¾Í¿ÉÒÔÊµÏÖ´°¿Ú½ØÆÁ
+			// å¦‚æœimageèƒ½å¤Ÿè¢«ç”¨ä½œtransfer_srcçš„è¯ï¼Œå°±å¯ä»¥å®ç°çª—å£æˆªå±
 			if (surfaceCapabilities.supportedUsageFlags & VK_IMAGE_USAGE_TRANSFER_SRC_BIT)
 				swapchainCreateInfo.imageUsage |= VK_IMAGE_USAGE_TRANSFER_SRC_BIT;
-			// Èç¹ûimageÄÜ¹»±»ÓÃ×÷transfer_dstµÄ»°£¬¾Í¿ÉÒÔÊ¹ÓÃvkCmdClearColorImageÇåÆÁ£¬Ê¹ÓÃvkCmdBlitImage½«Í¼ÏñÖ±½Ó°áµ½ÆÁÄ»ÉÏ(²»±ØäÖÈ¾)
+			// å¦‚æœimageèƒ½å¤Ÿè¢«ç”¨ä½œtransfer_dstçš„è¯ï¼Œå°±å¯ä»¥ä½¿ç”¨vkCmdClearColorImageæ¸…å±ï¼Œä½¿ç”¨vkCmdBlitImageå°†å›¾åƒç›´æ¥æ¬åˆ°å±å¹•ä¸Š(ä¸å¿…æ¸²æŸ“)
 			if (surfaceCapabilities.supportedUsageFlags & VK_IMAGE_USAGE_TRANSFER_DST_BIT)
 				swapchainCreateInfo.imageUsage |= VK_IMAGE_USAGE_TRANSFER_DST_BIT;
 			else
@@ -720,7 +734,7 @@ namespace vulkan {
 			if (!availableSurfaceFormats.size())
 				if (VkResult result = GetSurfaceFormats())
 					return result;
-			// If surface format is not determined, select a a four-component UNORM format, ÔÚÎ´Ö¸¶¨µÄÇé¿öÏÂÊ¹ÓÃ¶ÌÂ·&&À´³¢ÊÔÉèÖÃÁ½ÖÖ³£¼û¸ñÊ½
+			// If surface format is not determined, select a a four-component UNORM format, åœ¨æœªæŒ‡å®šçš„æƒ…å†µä¸‹ä½¿ç”¨çŸ­è·¯&&æ¥å°è¯•è®¾ç½®ä¸¤ç§å¸¸è§æ ¼å¼
 			if (!swapchainCreateInfo.imageFormat)
 				if (SetSurfaceFormat({ VK_FORMAT_R8G8B8A8_UNORM, VK_COLOR_SPACE_SRGB_NONLINEAR_KHR }) &&
 					SetSurfaceFormat({ VK_FORMAT_B8G8R8A8_UNORM, VK_COLOR_SPACE_SRGB_NONLINEAR_KHR })) {
@@ -730,8 +744,8 @@ namespace vulkan {
 				}
 
 			// Get surface present modes
-			// ÓÉÓÚVK_PRESENT_MODE_IMMEDIATE_KHRºÍVK_PRESENT_MODE_FIFO_RELAXED_KHR¿ÉÄÜµ¼ÖÂ»­ÃæËºÁÑ
-			// ÔÚ²»ĞèÒªÏŞÖÆÖ¡ÂÊÊ±Ó¦µ±Ñ¡ÔñVK_PRESENT_MODE_MAILBOX_KHR£¬ĞèÒªÏŞÖÆÖ¡ÂÊÊ¹Æä×î´ó²»³¬¹ıÆÁÄ»Ë¢ĞÂÂÊÊ±Ó¦Ñ¡ÔñVK_PRESENT_MODE_FIFO_KHR
+			// ç”±äºVK_PRESENT_MODE_IMMEDIATE_KHRå’ŒVK_PRESENT_MODE_FIFO_RELAXED_KHRå¯èƒ½å¯¼è‡´ç”»é¢æ’•è£‚
+			// åœ¨ä¸éœ€è¦é™åˆ¶å¸§ç‡æ—¶åº”å½“é€‰æ‹©VK_PRESENT_MODE_MAILBOX_KHRï¼Œéœ€è¦é™åˆ¶å¸§ç‡ä½¿å…¶æœ€å¤§ä¸è¶…è¿‡å±å¹•åˆ·æ–°ç‡æ—¶åº”é€‰æ‹©VK_PRESENT_MODE_FIFO_KHR
 			uint32_t surfacePresentModeCount;
 			if (VkResult result = vkGetPhysicalDeviceSurfacePresentModesKHR(physicalDevice, surface, &surfacePresentModeCount, nullptr)) {
 				outStream << std::format("[ graphicsBase ] ERROR\nFailed to get the count of surface present modes!\nError code: {}\n", int32_t(result));
@@ -783,23 +797,23 @@ namespace vulkan {
 			debugUtilsMessenger = VK_NULL_HANDLE;
 		}
 
-		// ÖØ½¨Âß¼­Éè±¸
+		// é‡å»ºé€»è¾‘è®¾å¤‡
 		result_t RecreateDevice(const void* pNext = nullptr, VkDeviceCreateFlags flags = 0) {
-			// µÈ´ıÂß¼­Éè±¸¿ÕÏĞ
+			// ç­‰å¾…é€»è¾‘è®¾å¤‡ç©ºé—²
 			if (VkResult result = WaitIdle())
 				return result;
 			if (swapchain) {
-				// µ÷ÓÃÏú»Ù½»»»Á´Ê±µÄ»Øµ÷º¯Êı
+				// è°ƒç”¨é”€æ¯äº¤æ¢é“¾æ—¶çš„å›è°ƒå‡½æ•°
 				for (auto& i : callbacks_destroySwapchain)
 					i();
-				//Ïú»Ù½»»»Á´Í¼ÏñµÄimage view
+				//é”€æ¯äº¤æ¢é“¾å›¾åƒçš„image view
 				for (auto& i : swapchainImageViews)
 					if (i)
 						vkDestroyImageView(device, i, nullptr);
 				swapchainImageViews.resize(0);
-				// Ïú»Ùswap chain
+				// é”€æ¯swap chain
 				vkDestroySwapchainKHR(device, swapchain, nullptr);
-				// ÖØÖÃ
+				// é‡ç½®
 				swapchain = VK_NULL_HANDLE;
 				swapchainCreateInfo = {};
 			}
@@ -811,20 +825,20 @@ namespace vulkan {
 			return CreateDevice(pNext, flags);
 		}
 
-		// ÔÚ¿ª¹ØHDR»ò¸Ä±ä´°¿Ú´óĞ¡Ê±ĞèÒªÖØ½¨swap chain
+		// åœ¨å¼€å…³HDRæˆ–æ”¹å˜çª—å£å¤§å°æ—¶éœ€è¦é‡å»ºswap chain
 		result_t RecreateSwapchain() {
 			VkSurfaceCapabilitiesKHR surfaceCapabilities = {};
 			if (VkResult result = vkGetPhysicalDeviceSurfaceCapabilitiesKHR(physicalDevice, surface, &surfaceCapabilities)) {
 				outStream << std::format("[ graphicsBase ] ERROR\nFailed to get physical device surface capabilities!\nError code: {}\n", int32_t(result));
 				return result;
 			}
-			// Èç¹û´°¿ÚÏÔÊ¾ÇøÓòµÄ³¤»ò¿íÎª0£¨Í¨³£·¢ÉúÔÚ×îĞ¡»¯µ½ÈÎÎñÀ¸´°¿ÚÊ±£©£¬²»ÖØ½¨½»»»Á´
+			// å¦‚æœçª—å£æ˜¾ç¤ºåŒºåŸŸçš„é•¿æˆ–å®½ä¸º0ï¼ˆé€šå¸¸å‘ç”Ÿåœ¨æœ€å°åŒ–åˆ°ä»»åŠ¡æ çª—å£æ—¶ï¼‰ï¼Œä¸é‡å»ºäº¤æ¢é“¾
 			if (surfaceCapabilities.currentExtent.width == 0 ||
 				surfaceCapabilities.currentExtent.height == 0)
 				return VK_SUCCESS;
 			swapchainCreateInfo.imageExtent = surfaceCapabilities.currentExtent;
 			swapchainCreateInfo.oldSwapchain = swapchain;
-			// ±£³ÌĞòÃ»ÓĞÕıÔÚÊ¹ÓÃ¾ÉµÄ½»»»Á´, µÈ´ıÍ¼ĞÎºÍ³ÊÏÖ¶ÓÁĞÏĞÖÃ
+			// ä¿ç¨‹åºæ²¡æœ‰æ­£åœ¨ä½¿ç”¨æ—§çš„äº¤æ¢é“¾, ç­‰å¾…å›¾å½¢å’Œå‘ˆç°é˜Ÿåˆ—é—²ç½®
 			VkResult result = vkQueueWaitIdle(queue_graphics);
 			if (!result &&
 				queue_graphics != queue_presentation)
@@ -846,25 +860,31 @@ namespace vulkan {
 				i();
 			return VK_SUCCESS;
 		}
+
+		// ç”¨äºè·å–äº¤æ¢é“¾å›¾åƒç´¢å¼•åˆ°currentImageIndexï¼Œä»¥åŠåœ¨éœ€è¦é‡å»ºäº¤æ¢é“¾æ—¶è°ƒç”¨RecreateSwapchain()ã€é‡å»ºäº¤æ¢é“¾åé”€æ¯æ—§äº¤æ¢é“¾
 		result_t SwapImage(VkSemaphore semaphore_imageIsAvailable) {
+			// é”€æ¯æ—§swap chain, é€»è¾‘æ˜¯å¦‚æœåœ¨å½“å‰å¸§é‡å»ºäº¤æ¢é“¾ï¼Œé‚£ä¹ˆåœ¨ä¸‹ä¸€å¸§é”€æ¯äº¤æ¢é“¾
 			if (swapchainCreateInfo.oldSwapchain &&
 				swapchainCreateInfo.oldSwapchain != swapchain) {
 				vkDestroySwapchainKHR(device, swapchainCreateInfo.oldSwapchain, nullptr);
 				swapchainCreateInfo.oldSwapchain = VK_NULL_HANDLE;
 			}
+			// è·å–å¯ç”¨çš„swap chainå›¾åƒç´¢å¼•
 			while (VkResult result = vkAcquireNextImageKHR(device, swapchain, UINT64_MAX, semaphore_imageIsAvailable, VK_NULL_HANDLE, &currentImageIndex))
 				switch (result) {
 				case VK_SUBOPTIMAL_KHR:
 				case VK_ERROR_OUT_OF_DATE_KHR:
 					if (VkResult result = RecreateSwapchain())
 						return result;
-					break;
+					break; // æ³¨æ„é‡å»ºäº¤æ¢é“¾åä»éœ€è¦è·å–å›¾åƒï¼Œé€šè¿‡breakï¼Œå†æ¬¡æ‰§è¡Œwhileçš„æ¡ä»¶åˆ¤å®šè¯­å¥
 				default:
 					outStream << std::format("[ graphicsBase ] ERROR\nFailed to acquire the next image!\nError code: {}\n", int32_t(result));
 					return result;
 				}
 			return VK_SUCCESS;
 		}
+
+		// å°†command bufferæäº¤åˆ°ç”¨äºå›¾å½¢çš„é˜Ÿåˆ—
 		result_t SubmitCommandBuffer_Graphics(VkSubmitInfo& submitInfo, VkFence fence = VK_NULL_HANDLE) const {
 			submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
 			VkResult result = vkQueueSubmit(queue_graphics, 1, &submitInfo, fence);
@@ -872,6 +892,8 @@ namespace vulkan {
 				outStream << std::format("[ graphicsBase ] ERROR\nFailed to submit the command buffer!\nError code: {}\n", int32_t(result));
 			return result;
 		}
+
+		// ä¸€ç§æäº¤command bufferçš„å¸¸è§æƒ…å½¢, å¸¦éœ€è¦ç­‰å¾…çš„ä¿¡å·é‡ï¼Œå‘½ä»¤å®Œæˆåéœ€è¦ç½®ä½çš„ä¿¡å·é‡å’Œæ …æ 
 		result_t SubmitCommandBuffer_Graphics(VkCommandBuffer commandBuffer,
 			VkSemaphore semaphore_imageIsAvailable = VK_NULL_HANDLE, VkSemaphore semaphore_renderingIsOver = VK_NULL_HANDLE, VkFence fence = VK_NULL_HANDLE) const {
 			static constexpr VkPipelineStageFlags waitDstStage = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
@@ -888,6 +910,8 @@ namespace vulkan {
 				submitInfo.pSignalSemaphores = &semaphore_renderingIsOver;
 			return SubmitCommandBuffer_Graphics(submitInfo, fence);
 		}
+
+		// åªä½¿ç”¨æ …æ çš„å¸¸è§æƒ…å½¢
 		result_t SubmitCommandBuffer_Graphics(VkCommandBuffer commandBuffer, VkFence fence = VK_NULL_HANDLE) const {
 			VkSubmitInfo submitInfo = {
 				.commandBufferCount = 1,
@@ -895,6 +919,8 @@ namespace vulkan {
 			};
 			return SubmitCommandBuffer_Graphics(submitInfo, fence);
 		}
+
+		// å°†command bufferæäº¤åˆ°ç”¨äºè®¡ç®—çš„é˜Ÿåˆ—, åªæ˜¯ç”¨æ …æ çš„æƒ…å½¢
 		result_t SubmitCommandBuffer_Compute(VkSubmitInfo& submitInfo, VkFence fence = VK_NULL_HANDLE) const {
 			submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
 			VkResult result = vkQueueSubmit(queue_compute, 1, &submitInfo, fence);
@@ -902,6 +928,8 @@ namespace vulkan {
 				outStream << std::format("[ graphicsBase ] ERROR\nFailed to submit the command buffer!\nError code: {}\n", int32_t(result));
 			return result;
 		}
+
+		// å°†command bufferæäº¤åˆ°ç”¨äºè®¡ç®—çš„é˜Ÿåˆ—
 		result_t SubmitCommandBuffer_Compute(VkCommandBuffer commandBuffer, VkFence fence = VK_NULL_HANDLE) const {
 			VkSubmitInfo submitInfo = {
 				.commandBufferCount = 1,
@@ -909,6 +937,8 @@ namespace vulkan {
 			};
 			return SubmitCommandBuffer_Compute(submitInfo, fence);
 		}
+
+		// å°†command bufferæäº¤åˆ°ç”¨äºè®¡ç®—çš„é˜Ÿåˆ—, å¸¦éœ€è¦ç­‰å¾…çš„ä¿¡å·é‡ï¼Œå‘½ä»¤å®Œæˆåéœ€è¦ç½®ä½çš„ä¿¡å·é‡å’Œæ …æ 
 		result_t SubmitCommandBuffer_Presentation(VkCommandBuffer commandBuffer,
 			VkSemaphore semaphore_renderingIsOver = VK_NULL_HANDLE, VkSemaphore semaphore_ownershipIsTransfered = VK_NULL_HANDLE, VkFence fence = VK_NULL_HANDLE) const {
 			static constexpr VkPipelineStageFlags waitDstStage = VK_PIPELINE_STAGE_ALL_COMMANDS_BIT;
@@ -929,6 +959,7 @@ namespace vulkan {
 				outStream << std::format("[ graphicsBase ] ERROR\nFailed to submit the presentation command buffer!\nError code: {}\n", int32_t(result));
 			return result;
 		}
+
 		void CmdTransferImageOwnership(VkCommandBuffer commandBuffer) const {
 			VkImageMemoryBarrier imageMemoryBarrier_g2p = {
 				.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER,
@@ -944,6 +975,7 @@ namespace vulkan {
 			vkCmdPipelineBarrier(commandBuffer, VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT, VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, 0,
 				0, nullptr, 0, nullptr, 1, &imageMemoryBarrier_g2p);
 		}
+
 		result_t PresentImage(VkPresentInfoKHR& presentInfo) {
 			presentInfo.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
 			switch (VkResult result = vkQueuePresentKHR(queue_presentation, &presentInfo)) {
@@ -957,6 +989,7 @@ namespace vulkan {
 				return result;
 			}
 		}
+
 		result_t PresentImage(VkSemaphore semaphore_renderingIsOver = VK_NULL_HANDLE) {
 			VkPresentInfoKHR presentInfo = {
 				.swapchainCount = 1,
@@ -975,22 +1008,30 @@ namespace vulkan {
 		}
 	};
 	inline graphicsBase graphicsBase::singleton;
-
+	
+	// ä¿¡å·é‡ç”¨äºåœ¨é˜Ÿåˆ—ä¹‹é—´è¿›è¡ŒåŒæ­¥
 	class semaphore {
 		VkSemaphore handle = VK_NULL_HANDLE;
 	public:
-		//semaphore() = default;
+		// semaphore() = default;
 		semaphore(VkSemaphoreCreateInfo& createInfo) {
 			Create(createInfo);
 		}
+
+		// é»˜è®¤æ„é€ å™¨åˆ›å»ºæœªç½®ä½çš„ä¿¡å·é‡
 		semaphore(/*reserved for future use*/) {
 			Create();
 		}
+
 		semaphore(semaphore&& other) noexcept { MoveHandle; }
+
 		~semaphore() { DestroyHandleBy(vkDestroySemaphore); }
+
 		//Getter
 		DefineHandleTypeOperator;
+
 		DefineAddressFunction;
+
 		//Non-const Function
 		result_t Create(VkSemaphoreCreateInfo& createInfo) {
 			createInfo.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
@@ -1004,45 +1045,62 @@ namespace vulkan {
 			return Create(createInfo);
 		}
 	};
+
+	// æ …æ ç”¨äºåœ¨cpu(app)ä¾§å’Œé˜Ÿåˆ—ä¹‹é—´è¿›è¡ŒåŒæ­¥
 	class fence {
 		VkFence handle = VK_NULL_HANDLE;
 	public:
-		//fence() = default;
+		// fence() = default;
 		fence(VkFenceCreateInfo& createInfo) {
 			Create(createInfo);
 		}
+
+		// é»˜è®¤æ„é€ å™¨åˆ›å»ºæœªç½®ä½çš„æ …æ 
 		fence(VkFenceCreateFlags flags = 0) {
 			Create(flags);
 		}
+
 		fence(fence&& other) noexcept { MoveHandle; }
+
 		~fence() { DestroyHandleBy(vkDestroyFence); }
-		//Getter
+
+		// Getter, è½¬æ¢ä¸ºvulkan rawç±»å‹
 		DefineHandleTypeOperator;
+
 		DefineAddressFunction;
-		//Const Function
+
+		// Const Function
+		// ç­‰å¾…å½“å‰æ …æ è¢«ç½®ä½
 		result_t Wait() const {
 			VkResult result = vkWaitForFences(graphicsBase::Base().Device(), 1, &handle, false, UINT64_MAX);
 			if (result)
 				outStream << std::format("[ fence ] ERROR\nFailed to wait for the fence!\nError code: {}\n", int32_t(result));
 			return result;
 		}
+
+		// å°†å½“å‰æ …æ é‡ç½®ä¸ºæœªç½®ä½çŠ¶æ€
 		result_t Reset() const {
 			VkResult result = vkResetFences(graphicsBase::Base().Device(), 1, &handle);
 			if (result)
 				outStream << std::format("[ fence ] ERROR\nFailed to reset the fence!\nError code: {}\n", int32_t(result));
 			return result;
 		}
+
+		// é’ˆå¯¹â€œç­‰å¾…åç«‹åˆ»é‡ç½®â€çš„æƒ…å½¢çš„helperå‡½æ•°
 		result_t WaitAndReset() const {
 			VkResult result = Wait();
 			result || (result = Reset());
 			return result;
 		}
+
+		// vkGetFenceStatus(...)æˆåŠŸæ—¶æœ‰ä¸¤ç§ç»“æœï¼Œæ‰€ä»¥ä¸èƒ½ä»…ä»…åˆ¤æ–­resultæ˜¯å¦é0
 		result_t Status() const {
 			VkResult result = vkGetFenceStatus(graphicsBase::Base().Device(), handle);
 			if (result < 0)
 				outStream << std::format("[ fence ] ERROR\nFailed to get the status of the fence!\nError code: {}\n", int32_t(result));
 			return result;
 		}
+
 		//Non-const Function
 		result_t Create(VkFenceCreateInfo& createInfo) {
 			createInfo.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
@@ -1051,6 +1109,7 @@ namespace vulkan {
 				outStream << std::format("[ fence ] ERROR\nFailed to create a fence!\nError code: {}\n", int32_t(result));
 			return result;
 		}
+
 		result_t Create(VkFenceCreateFlags flags = 0) {
 			VkFenceCreateInfo createInfo = {
 				.flags = flags
@@ -1059,24 +1118,33 @@ namespace vulkan {
 		}
 	};
 
+	// ç€è‰²å™¨æ¨¡ç»„
 	class shaderModule {
 		VkShaderModule handle = VK_NULL_HANDLE;
 	public:
 		shaderModule() = default;
+
 		shaderModule(VkShaderModuleCreateInfo& createInfo) {
 			Create(createInfo);
 		}
+
 		shaderModule(const char* filepath /*reserved for future use*/) {
 			Create(filepath);
 		}
+
 		shaderModule(size_t codeSize, const uint32_t* pCode /*reserved for future use*/) {
 			Create(codeSize, pCode);
 		}
+
 		shaderModule(shaderModule&& other) noexcept { MoveHandle; }
+
 		~shaderModule() { DestroyHandleBy(vkDestroyShaderModule); }
+
 		//Getter
 		DefineHandleTypeOperator;
+
 		DefineAddressFunction;
+
 		//Const Function
 		VkPipelineShaderStageCreateInfo StageCreateInfo(VkShaderStageFlagBits stage, const char* entry = "main") const {
 			return {
@@ -1086,9 +1154,10 @@ namespace vulkan {
 				stage,                                              //stage
 				handle,                                             //module
 				entry,                                              //pName
-				nullptr                                             //pSpecializationInfo
+				nullptr                                             //pSpecializationInfo, é»˜è®¤shaderä¸­æ²¡æœ‰éœ€è¦ç‰¹åŒ–çš„å¸¸é‡
 			};
 		}
+
 		//Non-const Function
 		result_t Create(VkShaderModuleCreateInfo& createInfo) {
 			createInfo.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
@@ -1097,19 +1166,7 @@ namespace vulkan {
 				outStream << std::format("[ shader ] ERROR\nFailed to create a shader module!\nError code: {}\n", int32_t(result));
 			return result;
 		}
-		result_t Create(const char* filepath /*reserved for future use*/) {
-			std::ifstream file(filepath, std::ios::ate | std::ios::binary);
-			if (!file) {
-				outStream << std::format("[ shader ] ERROR\nFailed to open the file: {}\n", filepath);
-				return VK_RESULT_MAX_ENUM;//No proper VkResult enum value, don't use VK_ERROR_UNKNOWN
-			}
-			size_t fileSize = size_t(file.tellg());
-			std::vector<uint32_t> binaries(fileSize / 4);
-			file.seekg(0);
-			file.read(reinterpret_cast<char*>(binaries.data()), fileSize);
-			file.close();
-			return Create(fileSize, binaries.data());
-		}
+
 		result_t Create(size_t codeSize, const uint32_t* pCode /*reserved for future use*/) {
 			VkShaderModuleCreateInfo createInfo = {
 				.codeSize = codeSize,
@@ -1117,19 +1174,41 @@ namespace vulkan {
 			};
 			return Create(createInfo);
 		}
+
+		result_t Create(const char* filepath /*reserved for future use*/) {
+			std::ifstream file(filepath, std::ios::ate | std::ios::binary); // std::ios::ate æ–‡ä»¶æŒ‡é’ˆå®šä½åˆ°æ–‡ä»¶æœ«å°¾, std::ios::binary ä»¥äºŒè¿›åˆ¶æ ¼å¼æ‰“å¼€
+			if (!file) {
+				outStream << std::format("[ shader ] ERROR\nFailed to open the file: {}\n", filepath);
+				return VK_RESULT_MAX_ENUM; // No proper VkResult enum value, don't use VK_ERROR_UNKNOWN
+			}
+			size_t fileSize = size_t(file.tellg()); // ä½¿ç”¨ file.tellg() è·å–æ–‡ä»¶æŒ‡é’ˆçš„å½“å‰ä½ç½®ï¼ˆæ–‡ä»¶æœ«å°¾ï¼‰ï¼Œç„¶åå°†å…¶è½¬æ¢ä¸º size_t ç±»å‹ï¼Œå¾—åˆ°æ–‡ä»¶çš„å¤§å°
+			std::vector<uint32_t> binaries(fileSize / 4);
+			file.seekg(0); // å°†æ–‡ä»¶æŒ‡é’ˆç§»åŠ¨åˆ°æ–‡ä»¶çš„å¼€å§‹ä½ç½®ï¼Œå‡†å¤‡è¯»å–æ–‡ä»¶å†…å®¹
+			file.read(reinterpret_cast<char*>(binaries.data()), fileSize);
+			file.close();
+			return Create(fileSize, binaries.data());
+		}
 	};
+
+	// ç®¡çº¿å¸ƒå±€
 	class pipelineLayout {
 		VkPipelineLayout handle = VK_NULL_HANDLE;
 	public:
 		pipelineLayout() = default;
+
 		pipelineLayout(VkPipelineLayoutCreateInfo& createInfo) {
 			Create(createInfo);
 		}
+
 		pipelineLayout(pipelineLayout&& other) noexcept { MoveHandle; }
+
 		~pipelineLayout() { DestroyHandleBy(vkDestroyPipelineLayout); }
+
 		//Getter
 		DefineHandleTypeOperator;
+
 		DefineAddressFunction;
+
 		//Non-const Function
 		result_t Create(VkPipelineLayoutCreateInfo& createInfo) {
 			createInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
@@ -1139,21 +1218,30 @@ namespace vulkan {
 			return result;
 		}
 	};
+
+	// ç®¡çº¿
 	class pipeline {
 		VkPipeline handle = VK_NULL_HANDLE;
 	public:
 		pipeline() = default;
+
 		pipeline(VkGraphicsPipelineCreateInfo& createInfo) {
 			Create(createInfo);
 		}
+
 		pipeline(VkComputePipelineCreateInfo& createInfo) {
 			Create(createInfo);
 		}
+
 		pipeline(pipeline&& other) noexcept { MoveHandle; }
+
 		~pipeline() { DestroyHandleBy(vkDestroyPipeline); }
+
 		//Getter
 		DefineHandleTypeOperator;
+
 		DefineAddressFunction;
+
 		//Non-const Function
 		result_t Create(VkGraphicsPipelineCreateInfo& createInfo) {
 			createInfo.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
@@ -1162,6 +1250,7 @@ namespace vulkan {
 				outStream << std::format("[ pipeline ] ERROR\nFailed to create a graphics pipeline!\nError code: {}\n", int32_t(result));
 			return result;
 		}
+
 		result_t Create(VkComputePipelineCreateInfo& createInfo) {
 			createInfo.sType = VK_STRUCTURE_TYPE_COMPUTE_PIPELINE_CREATE_INFO;
 			VkResult result = vkCreateComputePipelines(graphicsBase::Base().Device(), VK_NULL_HANDLE, 1, &createInfo, nullptr, &handle);
@@ -1171,24 +1260,32 @@ namespace vulkan {
 		}
 	};
 
+	// æ¸²æŸ“é€šé“
 	class renderPass {
 		VkRenderPass handle = VK_NULL_HANDLE;
 	public:
 		renderPass() = default;
+
 		renderPass(VkRenderPassCreateInfo& createInfo) {
 			Create(createInfo);
 		}
+
 		renderPass(renderPass&& other) noexcept { MoveHandle; }
+
 		~renderPass() { DestroyHandleBy(vkDestroyRenderPass); }
+
 		//Getter
 		DefineHandleTypeOperator;
+
 		DefineAddressFunction;
-		//Const Function
+
+		//Const Function, å¼€å§‹æ¸²æŸ“é€šé“
 		void CmdBegin(VkCommandBuffer commandBuffer, VkRenderPassBeginInfo& beginInfo, VkSubpassContents subpassContents = VK_SUBPASS_CONTENTS_INLINE) const {
 			beginInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
 			beginInfo.renderPass = handle;
 			vkCmdBeginRenderPass(commandBuffer, &beginInfo, subpassContents);
 		}
+
 		void CmdBegin(VkCommandBuffer commandBuffer, VkFramebuffer framebuffer, VkRect2D renderArea, arrayRef<const VkClearValue> clearValues = {}, VkSubpassContents subpassContents = VK_SUBPASS_CONTENTS_INLINE) const {
 			VkRenderPassBeginInfo beginInfo = {
 				.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO,
@@ -1200,12 +1297,17 @@ namespace vulkan {
 			};
 			vkCmdBeginRenderPass(commandBuffer, &beginInfo, subpassContents);
 		}
+
+		// è¿›å…¥ä¸‹ä¸€ä¸ªå­é€šé“
 		void CmdNext(VkCommandBuffer commandBuffer, VkSubpassContents subpassContents = VK_SUBPASS_CONTENTS_INLINE) const {
 			vkCmdNextSubpass(commandBuffer, subpassContents);
 		}
+
+		// ç»“æŸæ¸²æŸ“é€šé“
 		void CmdEnd(VkCommandBuffer commandBuffer) const {
 			vkCmdEndRenderPass(commandBuffer);
 		}
+
 		//Non-const Function
 		result_t Create(VkRenderPassCreateInfo& createInfo) {
 			createInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
@@ -1215,18 +1317,26 @@ namespace vulkan {
 			return result;
 		}
 	};
+
+	// å¸§ç¼“å†²åŒº, æ¸²æŸ“ç¼“å†²åŒº
 	class framebuffer {
 		VkFramebuffer handle = VK_NULL_HANDLE;
 	public:
 		framebuffer() = default;
+
 		framebuffer(VkFramebufferCreateInfo& createInfo) {
 			Create(createInfo);
 		}
+
 		framebuffer(framebuffer&& other) noexcept { MoveHandle; }
+
 		~framebuffer() { DestroyHandleBy(vkDestroyFramebuffer); }
+
 		//Getter
 		DefineHandleTypeOperator;
+
 		DefineAddressFunction;
+
 		//Non-const Function
 		result_t Create(VkFramebufferCreateInfo& createInfo) {
 			createInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
@@ -1242,10 +1352,14 @@ namespace vulkan {
 		VkCommandBuffer handle = VK_NULL_HANDLE;
 	public:
 		commandBuffer() = default;
+
 		commandBuffer(commandBuffer&& other) noexcept { MoveHandle; }
+
 		//Getter
 		DefineHandleTypeOperator;
+
 		DefineAddressFunction;
+
 		//Const Function
 		result_t Begin(VkCommandBufferUsageFlags usageFlags, VkCommandBufferInheritanceInfo& inheritanceInfo) const {
 			inheritanceInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_INFO;
@@ -1259,6 +1373,7 @@ namespace vulkan {
 				outStream << std::format("[ commandBuffer ] ERROR\nFailed to begin a command buffer!\nError code: {}\n", int32_t(result));
 			return result;
 		}
+
 		result_t Begin(VkCommandBufferUsageFlags usageFlags = 0) const {
 			VkCommandBufferBeginInfo beginInfo = {
 				.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO,
@@ -1269,6 +1384,7 @@ namespace vulkan {
 				outStream << std::format("[ commandBuffer ] ERROR\nFailed to begin a command buffer!\nError code: {}\n", int32_t(result));
 			return result;
 		}
+
 		result_t End() const {
 			VkResult result = vkEndCommandBuffer(handle);
 			if (result)
@@ -1276,22 +1392,30 @@ namespace vulkan {
 			return result;
 		}
 	};
+
 	class commandPool {
 		VkCommandPool handle = VK_NULL_HANDLE;
 	public:
 		commandPool() = default;
+
 		commandPool(VkCommandPoolCreateInfo& createInfo) {
 			Create(createInfo);
 		}
+
 		commandPool(uint32_t queueFamilyIndex, VkCommandPoolCreateFlags flags = 0) {
 			Create(queueFamilyIndex, flags);
 		}
+
 		commandPool(commandPool&& other) noexcept { MoveHandle; }
+
 		~commandPool() { DestroyHandleBy(vkDestroyCommandPool); }
+
 		//Getter
 		DefineHandleTypeOperator;
+
 		DefineAddressFunction;
-		//Const Function
+
+		//Const Function, VK_COMMAND_BUFFER_LEVEL_PRIMARYä¸ºä¸€çº§å‘½ä»¤ç¼“å†²åŒº
 		result_t AllocateBuffers(arrayRef<VkCommandBuffer> buffers, VkCommandBufferLevel level = VK_COMMAND_BUFFER_LEVEL_PRIMARY) const {
 			VkCommandBufferAllocateInfo allocateInfo = {
 				.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO,
@@ -1304,18 +1428,22 @@ namespace vulkan {
 				outStream << std::format("[ commandPool ] ERROR\nFailed to allocate command buffers!\nError code: {}\n", int32_t(result));
 			return result;
 		}
+
 		result_t AllocateBuffers(arrayRef<commandBuffer> buffers, VkCommandBufferLevel level = VK_COMMAND_BUFFER_LEVEL_PRIMARY) const {
 			return AllocateBuffers(
 				{ &buffers[0].handle, buffers.Count() },
 				level);
 		}
+
 		void FreeBuffers(arrayRef<VkCommandBuffer> buffers) const {
 			vkFreeCommandBuffers(graphicsBase::Base().Device(), handle, buffers.Count(), buffers.Pointer());
 			memset(buffers.Pointer(), 0, buffers.Count() * sizeof(VkCommandBuffer));
 		}
+
 		void FreeBuffers(arrayRef<commandBuffer> buffers) const {
 			FreeBuffers({ &buffers[0].handle, buffers.Count() });
 		}
+
 		//Non-const Function
 		result_t Create(VkCommandPoolCreateInfo& createInfo) {
 			createInfo.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
@@ -1324,6 +1452,7 @@ namespace vulkan {
 				outStream << std::format("[ commandPool ] ERROR\nFailed to create a command pool!\nError code: {}\n", int32_t(result));
 			return result;
 		}
+
 		result_t Create(uint32_t queueFamilyIndex, VkCommandPoolCreateFlags flags = 0) {
 			VkCommandPoolCreateInfo createInfo = {
 				.flags = flags,
